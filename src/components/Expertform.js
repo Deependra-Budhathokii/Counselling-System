@@ -1,66 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+import React from "react";
+import { useFormState } from "react-dom";
+import { useRef } from "react";
+import { createExpert } from "@/actions/expertServerAction";
 
-## Getting Started
+const initialState = {
+  status: "",
+};
 
-First, run the development server:
+const Expertform = () => {
+  const ref = useRef(null); // Just to reset form
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  const [state, create] = useFormState(createExpert, initialState);
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Note
-
-<!-- const Patientform = async () => {
-  // Create Function
-  const create = async (formData) => {
-    "use server";
-    await connectDB();
-
-    const result = await patientmod.create({
-      username: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      problem: formData.get("problem"),
-      problemhistory: formData.get("problemhistory"),
-    });
-
-    console.log("Results", result);
-  };
   return (
     <>
       <div className="flex items-center justify-center p-12">
         <div className="mx-auto w-full max-w-[550px]">
-          <form action={create}>
+          <form
+            ref={ref}
+            action={async (formdata) => {
+              await create(formdata);
+              ref.current?.reset();
+            }}
+          >
             <div className="mb-5">
               <label
-                htmlFor="name"
+                htmlFor="username"
                 className="mb-3 block text-base font-medium text-[#07074D]"
               >
                 Full Name
@@ -68,8 +33,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
               <input
                 type="text"
-                name="name"
-                id="name"
+                name="username"
+                id="username"
                 placeholder="Full Name"
                 className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               />
@@ -106,31 +71,31 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
             </div>
             <div className="mb-5">
               <label
-                htmlFor="name"
+                htmlFor="expertise"
                 className="mb-3 block text-base font-medium text-[#07074D]"
               >
-                Problem
+                Expertise
               </label>
               <input
                 type="text"
-                name="problem"
-                id="problem"
-                placeholder="Current Problem"
+                name="expertise"
+                id="expertise"
+                placeholder="Your Expertise"
                 className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               />
             </div>
             <div className="mb-5">
               <label
-                htmlFor="Problem"
+                htmlFor="profile"
                 className="mb-3 block text-base font-medium text-[#07074D]"
               >
-                Problem History
+                Profile Details
               </label>
               <textarea
                 rows="4"
-                name="problemhistory"
-                id="problemhistory"
-                placeholder="Type your Problem History"
+                name="profile"
+                id="profile"
+                placeholder="Give your biography details"
                 className="w-full resize-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               ></textarea>
             </div>
@@ -142,6 +107,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
                 Submit
               </button>
             </div>
+
+            {state?.status === "success" && (
+              <div className="mt-5 text-green-500">
+                Your message has been successfully submitted!
+              </div>
+            )}
+            {state?.status === "error" && (
+              <div className="mt-5 text-red-500">
+                Something went wrong. Please try again.
+              </div>
+            )}
           </form>
         </div>
       </div>
@@ -149,4 +125,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
   );
 };
 
-export default Patientform; -->
+export default Expertform;
